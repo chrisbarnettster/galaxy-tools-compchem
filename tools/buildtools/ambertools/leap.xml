@@ -1,0 +1,138 @@
+<tool id="leap" name="Leap" version="@VERSION@">
+  <description> Link, edit and parm input preparation</description>
+  <macros>
+    <import>macros.xml</import>
+  </macros>
+  <expand macro="requirements"></expand>
+  <command detect_errors="exit_code">
+    <![CDATA[
+        ln -s '$ligandinput1' input.mol2
+        &&
+        ln -s '$ligandinputfrcmod1' input.frcmod
+        &&
+        ln -s '$outputprmtop1' output.prmtop
+        &&
+        ln -s '$outputinpcrd2' output.inpcrd
+        &&
+        bash '$tleap_script_ligand_solvent' > '$outputscript3'
+        &&
+        ln -s '$outputscript3' tleap.in
+        &&
+        tleap -f tleap.in
+
+        ]]>
+  </command>
+  <configfiles>
+    <inputs name="inputs"/>
+    <configfile name="tleap_script_ligand_solvent">
+      <![CDATA[
+      cat << EOF | tee /tmp/script.in
+            #for $i, $s  in enumerate( $Forcefields)
+source $s
+            #end for
+
+ligA = loadmol2 input.mol2
+loadamberparams input.frcmod
+
+#if $solvions.dimension_format.dimension == "1":
+$solvions.box ligA TIP3PBOX $solvions.dimension_format.distance $solvions.iso
+#else if $solvions.dimension_format.dimension == "3" :
+$solvions.box ligA TIP3PBOX $solvions.dimension_format.distancex $solvions.dimension_format.distancey $solvions.dimension_format.distancez $solvions.iso
+#else
+ # error, did not match any dimensions.
+#end if
+#addIonsRand ligA  Na+ 0
+saveamberparm ligA output.prmtop output.inpcrd
+quit
+EOF
+]]>
+    </configfile>
+  </configfiles>
+  <inputs>
+    <conditional name="input_format">
+      <param name="template_style" type="select" label="Select a template style for tleap:">
+        <option value="ligandinsolventbox">ligand in solvent box</option>
+        <option value="proteinwithligands">protein with ligands</option>
+      </param>
+      <when value="proteinwithligands">
+        <param type="data" name="proteininput1" label="Protein molecular input" format="mol2,pdb"/>
+        <param type="data" name="ligandinput1" label="Ligand molecular input" format="mol2"/>
+        <param type="data" name="ligandinputfrcmod1" optional="true" label="Ligand frcmod param (Optional)" format="txt" help="frcmod is optional"/>
+      </when>
+      <when value="ligandinsolventbox">
+        <param type="data" name="ligandinput1" format="mol2" label="Ligand molecular input"/>
+        <param type="data" name="ligandinputfrcmod1" optional="true" label="Ligand frcmod parameters (Optional)" format="txt" help="frcmod is optional"/>
+      </when>
+    </conditional>
+    <param name="Forcefields" type="select" multiple="true" label="Forcefield(s) to load" help="">
+      <option value="leaprc.protein.ff14SB" selected="true">ff14SB</option>
+      <option value="leaprc.gaff2" selected="true">gaff2</option>
+      <option value="leaprc.water.tip3p" selected="true">water tip3p</option>
+    </param>
+    <section name="solvions" title="Solvate and add ions" expanded="true">
+      <param name="box" type="select" label="Select box type" help="box like or octahedral">
+        <option value="solvateBox" selected="true">Box</option>
+        <option value="solvateOct">Oct</option>
+      </param>
+      <conditional name="dimension_format">
+        <param name="dimension" type="select" display="radio" label="Uniform distance or differing x,y,z distance">
+          <option value="1">1 - uniform</option>
+          <option value="3">3 - multiple</option>
+        </param>
+        <when value="1">
+          <param name="distance" type="integer" value="20" label="Distance" help="Minimum distance between solute and edge of a periodic box" min="1" max="100"/>
+        </when>
+        <when value="3">
+          <param name="distancex" type="integer" value="20" label="Distance x" help="Minimum distance between solute and edge of a periodic box" min="1" max="100"/>
+          <param name="distancey" type="integer" value="20" label="Distance y" help="Minimum distance between solute and edge of a periodic box" min="1" max="100"/>
+          <param name="distancez" type="integer" value="20" label="Distance z" help="Minimum distance between solute and edge of a periodic box" min="1" max="100"/>
+        </when>
+      </conditional>
+      <param name="iso" type="boolean" checked="true" truevalue="iso" falsevalue="" label="" help="rotate box to orient to principal axes."/>
+    </section>
+  </inputs>
+  <outputs>
+    <data format="txt" name="outputprmtop1" label="${tool.name}: prmtop output"/>
+    <data format="txt" name="outputinpcrd2" label="${tool.name}: inpcrd output"/>
+    <data format="txt" name="outputscript3" label="${tool.name}: script output"/>
+  </outputs>
+  <help>
+    <![CDATA[
+.. class:: infomark
+
+**What it does**
+
+Leap -  link, edit and parm - prepare input for molecular mechanics.
+
+.. class:: infomark
+
+**How it works**
+
+- Select a mol input file (mol2)
+- Specify the correct unknown parameter
+
+.. class:: infomark
+
+**Outputs created**
+
+- Outputs a frcmod file as text
+
+.. class:: infomark
+
+**User guide and documentation**
+
+- AmberTools `userguide`_
+
+
+.. _`userguide`: http://ambermd.org/doc12/Amber19.pdf
+
+.. class:: infomark
+
+**Known issues**
+
+- If datatype is mol not mol2, tleap will crash. Does not matter if a soft link is used. Fix - edit the datatype and set it to be mol2 (this is not available in the upload and must be done after).
+
+]]>
+  </help>
+  <expand macro="citations"/>
+</tool>
