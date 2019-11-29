@@ -1,0 +1,19 @@
+name: openmm
+owner: chemteam
+description: "OpenMM. A high performance toolkit for molecular simulation"
+homepage_url: http://openmm.org
+long_description: |
+    OpenMM is a molecular dynamics simulation toolkit with a unique focus on extensibility.
+remote_repository_url: https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem/
+type: unrestricted
+categories:
+  - Molecular Dynamics
+  - Computational chemistry
+auto_tool_repositories:
+  name_template: "{{ tool_id }}"
+  description_template: "Wrapper for the OpenMM package: {{ tool_name }}"
+suite:
+  name: "suite_openmm"
+  description: "OpenMM. A high performance toolkit for molecular simulation"
+  long_description: |
+    OpenMM is a molecular dynamics simulation toolkit with a unique focus on extensibility.

@@ -1,0 +1,31 @@
+<macros>
+  <token name="@VERSION@">7.3.1</token>
+  <xml name="requirements">
+    <requirements>
+      <requirement type="package" version="7.3.1">ambertools</requirement>
+      <yield/>
+    </requirements>
+  </xml>
+  <xml name="citations">
+    <citations>
+      <citation type="doi">10.1002/jcc.20290</citation>
+      <citation type="bibtex">
+@article{10.1371/journal.pcbi.1005659,
+    author = {Eastman, Peter AND Swails, Jason AND Chodera, John D. AND McGibbon, Robert T. AND Zhao, Yutong AND Beauchamp, Kyle A. AND Wang, Lee-Ping AND Simmonett, Andrew C. AND Harrigan, Matthew P. AND Stern, Chaya D. AND Wiewiora, Rafal P. AND Brooks, Bernard R. AND Pande, Vijay S.},
+    journal = {PLOS Computational Biology},
+    publisher = {Public Library of Science},
+    title = {OpenMM 7: Rapid development of high performance algorithms for molecular dynamics},
+    year = {2017},
+    month = {07},
+    volume = {13},
+    url = {https://doi.org/10.1371/journal.pcbi.1005659},
+    pages = {1-17},
+    abstract = {OpenMM is a molecular dynamics simulation toolkit with a unique focus on extensibility. It allows users to easily add new features, including forces with novel functional forms, new integration algorithms, and new simulation protocols. Those features automatically work on all supported hardware types (including both CPUs and GPUs) and perform well on all of them. In many cases they require minimal coding, just a mathematical description of the desired function. They also require no modification to OpenMM itself and can be distributed independently of OpenMM. This makes it an ideal tool for researchers developing new simulation methods, and also allows those new methods to be immediately available to the larger community.},
+    number = {7},
+    doi = {10.1371/journal.pcbi.1005659}
+    }
+</citation>
+      <yield/>
+    </citations>
+  </xml>
+</macros>
