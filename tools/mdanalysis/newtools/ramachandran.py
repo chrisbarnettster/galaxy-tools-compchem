@@ -51,15 +51,7 @@ R = Ramachandran(r).run()
 fig, ax = plt.subplots(figsize=plt.figaspect(1))
 R.plot(ax=ax,color='k', marker='.', ref=True)
 
-#print(R.angles)
 a = R.angles.reshape(np.prod(R.angles.shape[:2]), 2)
-#print(R.ag1)
-#print(R.atomgroup)
-#axis=plt.gca()
-#line = axis.lines[0]
-#print(line.get_xydata())
-#line = axis.lines[1]
-#print(line.get_xydata())
 plt.tight_layout()
 plt.savefig(args.o_plot1, format='png') # svg is better but sticking with png for now
 
@@ -67,7 +59,9 @@ sns.reset_defaults()
 import imp
 imp.reload(plt); imp.reload(sns)
 with sns.axes_style("white"):
-    h = sns.jointplot(x=a[:,0],y=a[:,1], kind="kde", space=0, legend=True, xlim=(-180,180))
+    #h = sns.jointplot(x=a[:,0],y=a[:,1], space=0)
+    #h = sns.jointplot(x=a[:,0],y=a[:,1], kind="hex", space=0)
+    h = sns.jointplot(x=a[:,0],y=a[:,1], kind="kde", space=0, n_levels=15)
     h.set_axis_labels(r'$\Phi$ (degrees)', r'$\Psi$ (degrees)')
     h.ax_joint.set_xlim(-180, 180)
     h.ax_joint.set_ylim(-180, 180)
