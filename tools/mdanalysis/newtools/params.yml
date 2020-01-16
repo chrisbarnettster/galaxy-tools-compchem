@@ -1,0 +1,36 @@
+ramachandran1:
+  phi:
+    atom1:
+     segid: CARA
+     resid: 1
+     name: O5
+    atom2:
+     segid: CARA
+     resid: 1
+     name: C1
+    atom3:
+     segid: PROA
+     resid: 4
+     name: OG1
+    atom4:
+     segid: PROA
+     resid: 4
+     name: CB
+  psi:
+    atom1:
+     segid: CARA
+     resid: 1
+     name: C1
+    atom2:
+     segid: PROA
+     resid: 4
+     name: OG1
+    atom3:
+     segid: PROA
+     resid: 4
+     name: CB
+    atom4:
+     segid: PROA
+     resid: 4
+     name: CA
+  comment: pick visually using VMD using labels. Go to labels, dihedral to see the information about resname resid and atomname and then lookup the segname for ach atom. 

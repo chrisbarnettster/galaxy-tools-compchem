@@ -1,0 +1,35 @@
+ramachandran1:
+  phi:
+    atom1:
+     segid: CARA
+     resid: 1
+     name: O5
+    atom2:
+     segid: CARA
+     resid: 1
+     name: C1
+    atom3:
+     segid: PROF
+     resid: 4
+     name: OG1
+    atom4:
+     segid: PROF
+     resid: 4
+     name: CB
+  psi:
+    atom1:
+     segid: CARA
+     resid: 1
+     name: C1
+    atom2:
+     segid: PROF
+     resid: 4
+     name: OG1
+    atom3:
+     segid: PROF
+     resid: 4
+     name: CB
+    atom4:
+     segid: PROF
+     resid: 4
+     name: CA
