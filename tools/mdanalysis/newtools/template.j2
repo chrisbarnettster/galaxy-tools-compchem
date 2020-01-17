@@ -1,0 +1,16 @@
+# Template for mmpbsa in Galaxy
+#  
+&general
+startframe={{ allparams.startframe }}, endframe={{ allparams.endframe }}, interval={{ allparams.interval }},
+verbose={{ allparams.verbose }}, keep_files={{ allparams.keep_files }}, strip_mask={{ allparams.strip_mask }},
+/
+{% if calcdetails.calculation.calctype == 'gb' %}
+&gb
+igb={{ calcdetails.calculation.igb }}, saltcon={{ calcdetails.calculation.saltcon }},
+/
+{% endif %}
+{% if calcdetails.calculation.calctype == 'pb' %}
+&pb
+istrng={{ calcdetails.calculation.istrng }}, fillratio={{ calcdetails.calculation.fillratio }}
+/
+{% endif %}

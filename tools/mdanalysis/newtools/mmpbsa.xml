@@ -1,0 +1,124 @@
+<tool id="mmpbsa" name="mmpbsa" version="19.0">
+    <description>- free energy estimate </description>
+    <requirements>
+        <requirement type="package" version="19.0">ambertools</requirement>
+        <requirement type="package">jinja2</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+        <![CDATA[
+        python '$mmpbsa_script' '$inputs' &&
+	export AMBERHOME=/home/cbarnett/anaconda3/envs/ambertools && 
+	MMPBSA.py -O -i '$parameteroutfile' -cp '$input.simulation.complex' -rp '$input.simulation.receptor' -lp '$input.simulation.ligand' -y '$input.simulation.trajcomplex' -o '$resultoutfile' -do '$decompoutfile'
+
+        ]]>
+    </command>
+    <configfiles>
+        <inputs name="inputs" />
+        <configfile name="mmpbsa_script"><![CDATA[
+
+import os
+import sys
+import json
+
+from jinja2 import Environment, FileSystemLoader
+
+input_json_path = sys.argv[1]
+params = json.load(open(input_json_path, "r"))
+
+
+currentpath = "$__tool_directory__"  # should work generally
+template_environment = Environment(loader=FileSystemLoader(currentpath),lstrip_blocks=True, trim_blocks=True)
+template = template_environment.get_template('template.j2')
+print(params)
+
+with open("$parameteroutfile",'w+') as f:
+    f.write(template.render(params))
+
+]]>
+        </configfile>
+    </configfiles>
+    <inputs>
+	<section name="input" title="Input" expanded="true">
+        <conditional name="simulation">
+        <param name="simtype" type="select" label="Single or Multiple Trajectories" help="Choose if this is a single or multiple trajectory estimate">
+         <option selected="True" value="single">single (STP)</option>
+         <option value="multiple">multiple (MTP)</option>
+        </param>
+        <when value="single">
+            <param format="txt" name="complex" type="data" label="AMBER prmtop input for Complex"/>
+            <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex"/>
+            <param format="txt" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
+            <param format="txt" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
+        </when>
+        <when value="multiple">
+            <param format="txt" name="complex" type="data" label="AMBER prmtop input for Complex"/>
+            <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex"/>
+            <param format="txt" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
+            <param format="netcdf" name="trajreceptor" type="data" label="NetCDF trajectory input for Receptor"/>
+            <param format="txt" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
+            <param format="netcdf" name="trajligand" type="data" label="NetCDF trajectory input for Ligand"/>
+        </when>
+        </conditional>
+	</section>
+        <section name="allparams" title="General parameters" expanded="true">
+            <param name="startframe" type="integer" value="5" label="Start frame" min="1" max="10000"/>
+            <param name="endframe" type="integer" value="90" label="End frame" min="10" max="100000000"/>
+            <param name="interval" type="integer" value="5" label="interval" min="1" max="10000"/>
+            <param name="verbose" type="integer" value="2" label="verbosity" min="0" max="3"/>
+            <param name="keep_files" type="integer" value="0" label="keep files" min="0" max="1"/>
+            <param name="strip_mask" type="text" value=":WAT:Cl-:Na+" label="Mask for removing unneeded atoms (e.g. water and ions"/>
+        </section>
+        <section name="calcdetails" title="Details of calculation and parameters" expanded="true">
+        <conditional name="calculation">
+        <param name="calctype" type="select" label="GB or PB calculation" help="Choose if this is a GB or PB">
+         <option selected="True" value="gb">gb</option>
+         <option value="pb">pb</option>
+        </param>
+        <when value="gb">
+            <param name="igb" type="integer" value="5" label="igb" min="0" max="7"/>
+            <param name="saltcon" type="float" value="0.150" label="igb" min="0.0" max="2.0"/>
+        </when>
+        <when value="pb">
+            <param name="istrng" type="float" value="0.15" label="istrng" min="0.0" max="2.0"/>
+            <param name="fillratio" type="float" value="4.0" label="fillratio" min="0.0" max="10.0"/>
+        </when>
+        </conditional>
+        </section>
+    </inputs>
+    <outputs>
+        <data format="txt" name="resultoutfile" label="${tool.name}: Statistics"/>
+        <data format="txt" name="decompoutfile" label="${tool.name}: Decomposition Statistics"/>
+        <data format="txt" name="parameteroutfile" label="${tool.name}: parameter output"/>
+    </outputs>
+    <help><![CDATA[
+.. class:: infomark
+
+**What it does**
+
+MMPBSA
+
+.. class:: infomark
+
+**How it works**
+
+- choose prmtop and netc
+
+.. class:: infomark
+
+**Outputs created**
+
+
+.. class:: infomark
+
+**User guide and documentation**
+
+- link to amber tools and tutorials online
+
+
+
+]]>
+    </help>
+    <citations>
+        <citation type="doi">10.1002/jcc.21224</citation>
+    </citations>
+</tool>
