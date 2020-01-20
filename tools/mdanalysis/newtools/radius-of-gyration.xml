@@ -1,0 +1,63 @@
+<tool id="mdanalysis_rog" name="Radius of gyration Analysis" version="@VERSION@">
+	<description>- Radius of gyration timeseries and histogram for the given selections</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>   
+    <expand macro="requirements" />
+    <command detect_errors="exit_code">
+<![CDATA[
+    python '$__tool_directory__/radius-of-gyration.py' 
+        --itraj '$trajin' 
+        --istr '$strin' 
+        --itrajext '$trajin.ext'
+        --istrext '$strin.ext'
+        --isegid1 '$segid1'
+	--ilabel '$label1'
+	--ititle1 '$title1'
+        --output1 '$output1' 
+        --o_plot '$o_plot'
+    2>&1
+]]></command>
+    <inputs>
+        <expand macro="analysis_inputs"/>
+        <param name="segid1"  type="text" value="PROA" label="Segment ID of atom 1"/>
+        <param name="label1"  type="text" value="RG" label="data series label"/>
+        <param name="title1"  type="text" value="Radius of gyration timeseries and histogram" label="Plot title"/>
+    </inputs>
+    <outputs>
+        <data format="tabular" name="output1" label="timeseries raw data"/>
+        <data format="png" name="o_plot" label="Radius of gyration Timeseries and Histogram Plot"/>
+    </outputs>
+    <help><![CDATA[
+.. class:: infomark
+
+**What it does**
+        
+Radius of gyration distance histogram
+
+_____
+
+
+.. class:: infomark
+
+**Input**
+
+       - Trajectory file (DCD).
+       - PDB file.
+       - Segment IDs, residue IDs and names of two atoms to calculate RDF values.
+
+Note that a MDAnalysis 'segment' is a larger organizational unit, for example one protein or all the solvent molecules or simply the whole system.
+
+_____
+
+        
+.. class:: infomark
+
+**Output**
+
+       - Tab-separated file of raw data of the e2e histo
+       - Image (as png) of the e2e histo
+
+    ]]></help>
+    <expand macro="citations" />
+</tool>
