@@ -27,6 +27,8 @@ def parse_command_line(argv):
     parser.add_argument('--itrajext', help='input traj ext')
     parser.add_argument('--istrext', help='input str ext')
     parser.add_argument('--isegid1', help='segid 1')
+    parser.add_argument('--iresid1', help='resid start')
+    parser.add_argument('--iresid2', help='resid end')
     parser.add_argument('--o_plot1', help='MDA Ramachandran plot')
     parser.add_argument('--o_plot2', help='Seaborn Ramachandran plot')
     return parser.parse_args()
@@ -41,6 +43,12 @@ u = mda.Universe(args.istr, args.itraj,
 
 selection = "(segid %s )" % \
     (args.isegid1)
+
+
+if args.iresid1 is not None and args.iresid2 is not None:
+    selection = "(segid %s and resid %s-%s)" % \
+        (args.isegid1,args.iresid1,args.iresid2)
+
 r = u.select_atoms(selection)
 
 R = Ramachandran(r).run()
