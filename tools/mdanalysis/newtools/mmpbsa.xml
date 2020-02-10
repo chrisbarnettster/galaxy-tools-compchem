@@ -61,12 +61,12 @@ with open("$parameteroutfile",'w+') as f:
         </conditional>
 	</section>
         <section name="allparams" title="General parameters" expanded="true">
-            <param name="startframe" type="integer" value="5" label="Start frame" min="1" max="10000"/>
-            <param name="endframe" type="integer" value="9999999" label="End frame" min="10" max="100000000"/>
-            <param name="interval" type="integer" value="5" label="interval" min="1" max="10000"/>
+            <param name="startframe" type="integer" value="5" label="First frame to analyse" min="1" max="10000"/>
+            <param name="endframe" type="integer" value="9999999" label="Final frame to analyse" min="10" max="100000000"/>
+            <param name="interval" type="integer" value="5" label="interval between frames analysed" min="1" max="10000"/>
             <param name="verbose" type="integer" value="2" label="verbosity" min="0" max="3"/>
             <param name="keep_files" type="integer" value="0" label="keep files" min="0" max="1"/>
-            <param name="strip_mask" type="text" value=":WAT:Cl-:Na+" label="Mask for removing unneeded atoms (e.g. water and ions"/>
+            <param name="strip_mask" type="text" value=":WAT:Cl-:Na+" label="Mask for removing unneeded atoms (e.g. water and ions) from solvated prmtop"/>
         </section>
         <section name="calcdetails" title="Details of calculation and parameters" expanded="true">
         <conditional name="calculation">
@@ -75,12 +75,34 @@ with open("$parameteroutfile",'w+') as f:
          <option value="pb">pb</option>
         </param>
         <when value="gb">
-            <param name="igb" type="integer" value="5" label="igb" min="0" max="7"/>
-            <param name="saltcon" type="float" value="0.150" label="igb" min="0.0" max="2.0"/>
+            <param name="igb" type="integer" value="5" label="igb GB model" min="0" max="7"/>
+            <param name="saltcon" type="float" value="0.150" label="Salt Concentration (M)" min="0.0" max="2.0"/>
+            <param name="ifqnt" type="integer" value="0" label="classical or quantum" min="0" max="1"/>
+	    <param name="qm_theory" type="select" label="Semi-empirical QM theory" help="Choose this.. ">
+<option selected="True" value="PM3">PM3</option>
+<option value="AM1">AM1</option>
+<option value="RM1">RM1</option>
+<option value="MNDO">MNDO</option>
+<option value="PM3-PDDG">PM3-PDDG</option>
+<option value="MNDO-PDDG">MNDO-PDDG</option>
+<option value="PM3-CARB1">PM3-CARB1</option>
+<option value="MNDOD">MNDOD</option>
+<option value="AM1D">AM1D</option>
+<option value="PM6">PM6</option>
+<option value="DFTB2">DFTB2</option>
+<option value="DFTB3">DFTB3</option>
+<option value="AM1-D*">AM1-D*</option>
+<option value="PM6-D">PM6-D</option>
+<option value="AM1-DH+">AM1-DH+</option>
+<option value="PM6-DH+">PM6-DH+</option>
+
+        </param>
         </when>
         <when value="pb">
-            <param name="istrng" type="float" value="0.15" label="istrng" min="0.0" max="2.0"/>
-            <param name="fillratio" type="float" value="4.0" label="fillratio" min="0.0" max="10.0"/>
+            <param name="istrng" type="float" value="0.15" label="Ionic Strength" min="0.0" max="2.0"/>
+            <param name="fillratio" type="float" value="4.0" label="The ratio between the longest dimension of the rectangular finite-difference grid and that of the solute" min="0.0" max="10.0"/>
+            <param name="inp" type="integer" value="1" label="Nonpolar solvation method" min="1" max="2"/>
+            <param name="radiopt" type="integer" value="0" label="Use optimized radii?" min="0" max="2"/>
         </when>
         </conditional>
         </section>
@@ -112,7 +134,10 @@ MMPBSA
 
 **User guide and documentation**
 
-- link to amber tools and tutorials online
+- link to amber tools and tutorials online https://ambermd.org/doc12/Amber18.pdf
+- There are many more complex flags available. This wrapper support only normal binding free energies. Parallel calculations are also not supported at present.
+- This is based on MMPBSA.py. More details on options that are not so well documented - see $CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/input_parser.py
+and $CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/main.py
 
 
 

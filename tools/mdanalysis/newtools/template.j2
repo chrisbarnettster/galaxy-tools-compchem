@@ -6,11 +6,11 @@ verbose={{ allparams.verbose }}, keep_files={{ allparams.keep_files }}, strip_ma
 /
 {% if calcdetails.calculation.calctype == 'gb' %}
 &gb
-igb={{ calcdetails.calculation.igb }}, saltcon={{ calcdetails.calculation.saltcon }},
+igb={{ calcdetails.calculation.igb }}, saltcon={{ calcdetails.calculation.saltcon }}, qm_theory={{ calcdetails.calculation.qm_theory }}, ifqnt={{ calcdetails.calculation.ifqnt }}
 /
 {% endif %}
 {% if calcdetails.calculation.calctype == 'pb' %}
 &pb
-istrng={{ calcdetails.calculation.istrng }}, fillratio={{ calcdetails.calculation.fillratio }}
+istrng={{ calcdetails.calculation.istrng }}, fillratio={{ calcdetails.calculation.fillratio }}, inp={{ calcdetails.calculation.inp }},radiopt={{ calcdetails.calculation.radiopt }}
 /
 {% endif %}
