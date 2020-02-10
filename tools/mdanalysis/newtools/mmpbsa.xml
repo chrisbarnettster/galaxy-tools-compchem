@@ -77,26 +77,6 @@ with open("$parameteroutfile",'w+') as f:
         <when value="gb">
             <param name="igb" type="integer" value="5" label="igb GB model" min="0" max="7"/>
             <param name="saltcon" type="float" value="0.150" label="Salt Concentration (M)" min="0.0" max="2.0"/>
-            <param name="ifqnt" type="integer" value="0" label="classical or quantum" min="0" max="1"/>
-	    <param name="qm_theory" type="select" label="Semi-empirical QM theory" help="Choose this.. ">
-<option selected="True" value="PM3">PM3</option>
-<option value="AM1">AM1</option>
-<option value="RM1">RM1</option>
-<option value="MNDO">MNDO</option>
-<option value="PM3-PDDG">PM3-PDDG</option>
-<option value="MNDO-PDDG">MNDO-PDDG</option>
-<option value="PM3-CARB1">PM3-CARB1</option>
-<option value="MNDOD">MNDOD</option>
-<option value="AM1D">AM1D</option>
-<option value="PM6">PM6</option>
-<option value="DFTB2">DFTB2</option>
-<option value="DFTB3">DFTB3</option>
-<option value="AM1-D*">AM1-D*</option>
-<option value="PM6-D">PM6-D</option>
-<option value="AM1-DH+">AM1-DH+</option>
-<option value="PM6-DH+">PM6-DH+</option>
-
-        </param>
         </when>
         <when value="pb">
             <param name="istrng" type="float" value="0.15" label="Ionic Strength" min="0.0" max="2.0"/>
