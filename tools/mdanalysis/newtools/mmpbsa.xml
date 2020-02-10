@@ -7,7 +7,7 @@
     <command detect_errors="exit_code">
         <![CDATA[
         python '$mmpbsa_script' '$inputs' &&
-	export AMBERHOME=/home/cbarnett/anaconda3/envs/ambertools && 
+	export AMBERHOME=\$CONDA_PREFIX && 
 	MMPBSA.py -O -i '$parameteroutfile' -cp '$input.simulation.complex' -rp '$input.simulation.receptor' -lp '$input.simulation.ligand' -y '$input.simulation.trajcomplex' -o '$resultoutfile' -do '$decompoutfile'
 
         ]]>
@@ -45,24 +45,24 @@ with open("$parameteroutfile",'w+') as f:
          <option value="multiple">multiple (MTP)</option>
         </param>
         <when value="single">
-            <param format="txt" name="complex" type="data" label="AMBER prmtop input for Complex"/>
+            <param format="txt,prmtop" name="complex" type="data" label="AMBER prmtop input for Complex"/>
             <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex"/>
-            <param format="txt" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
-            <param format="txt" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
+            <param format="txt,prmtop" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
+            <param format="txt,prmtop" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
         </when>
         <when value="multiple">
-            <param format="txt" name="complex" type="data" label="AMBER prmtop input for Complex"/>
+            <param format="txt,prmtop" name="complex" type="data" label="AMBER prmtop input for Complex"/>
             <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex"/>
-            <param format="txt" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
+            <param format="txt,prmtop" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
             <param format="netcdf" name="trajreceptor" type="data" label="NetCDF trajectory input for Receptor"/>
-            <param format="txt" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
+            <param format="txt,prmtop" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
             <param format="netcdf" name="trajligand" type="data" label="NetCDF trajectory input for Ligand"/>
         </when>
         </conditional>
 	</section>
         <section name="allparams" title="General parameters" expanded="true">
             <param name="startframe" type="integer" value="5" label="Start frame" min="1" max="10000"/>
-            <param name="endframe" type="integer" value="90" label="End frame" min="10" max="100000000"/>
+            <param name="endframe" type="integer" value="9999999" label="End frame" min="10" max="100000000"/>
             <param name="interval" type="integer" value="5" label="interval" min="1" max="10000"/>
             <param name="verbose" type="integer" value="2" label="verbosity" min="0" max="3"/>
             <param name="keep_files" type="integer" value="0" label="keep files" min="0" max="1"/>
