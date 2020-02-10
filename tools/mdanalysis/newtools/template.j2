@@ -14,3 +14,9 @@ igb={{ calcdetails.calculation.igb }}, saltcon={{ calcdetails.calculation.saltco
 istrng={{ calcdetails.calculation.istrng }}, fillratio={{ calcdetails.calculation.fillratio }}, inp={{ calcdetails.calculation.inp }},radiopt={{ calcdetails.calculation.radiopt }}
 /
 {% endif %}
+{% if calcdetails.decomposition.decomposition == 'yes' %}
+&decomp
+csv_format={{ calcdetails.decomposition.csv_format }}, dec_verbose={{ calcdetails.decomposition.dec_verbose }}, idecomp={{ calcdetails.decomposition.idecomp }}, 
+/
+{% endif %}
+
