@@ -67,7 +67,7 @@ with open("$parameteroutfile",'w+') as f:
       </conditional>
     </section>
     <section name="allparams" title="General parameters" expanded="true">
-      <param name="startframe" type="integer" value="5" label="First frame to analyse" min="1" max="10000"/>
+      <param name="startframe" type="integer" value="1" label="First frame to analyse" min="1" max="10000"/>
       <param name="endframe" type="integer" value="9999999" label="Final frame to analyse" min="10" max="100000000"/>
       <param name="interval" type="integer" value="5" label="interval between frames analysed" min="1" max="10000"/>
       <param name="verbose" type="integer" value="2" label="verbosity" min="0" max="3"/>
@@ -111,6 +111,22 @@ with open("$parameteroutfile",'w+') as f:
     <data format="txt" name="decompoutfile" label="${tool.name}: Decomposition Statistics"/>
     <data format="txt" name="parameteroutfile" label="${tool.name}: parameter output"/>
   </outputs>
+    <tests>
+        <test>
+        <param name="complex" value="complex.prmtop" ftype="txt"/>
+	<param name="trajcomplex" value="1err_prod.nc" ftype="netcdf"/>
+        <param name="receptor" value="receptor.prmtop" ftype="txt"/>
+        <param name="ligand" value="ligand.prmtop" ftype="txt"/>
+        <param name="solvatedcomplex" value="1err.solvated.prmtop" ftype="txt"/>
+            <param name="calcdetails|calculation|igb" value="2"/>
+            <param name="calcdetails|calculation|saltcon" value="0.100"/>
+            <output name="resultoutfile">
+              <assert_contents>
+                <has_text text="DELTA TOTAL                -52." />
+              </assert_contents>
+            </output>
+        </test>
+    </tests>
   <help><![CDATA[
     .. class:: infomark
 
