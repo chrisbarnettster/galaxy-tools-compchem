@@ -110,26 +110,37 @@ with open("$parameteroutfile",'w+') as f:
 
 **What it does**
 
-MMPBSA
+This tool calculates the Molecular Mechanics Poisson-Boltzman Surface Area (MMPBSA) which is an estimate of the binding free energy between a ligand and a receptor. 
 
 .. class:: infomark
 
 **How it works**
 
-- choose prmtop and netc
+Prior to using this tool simulations of the ligand complexed with the receptor must be run. This tool, which wraps AmberTools will need a prmtop (Amber style parameter topology file for the receptor, ligand and the complex) and the trajectory in netCDF format.
+
+- Single Trajectory Estimate
+A simulation of the complex in water is run in advance. The trajectory of this complex is used to estimate the MMPBSA or MMGBSA depending on the options chosen. A General Born (GB) calculation is recommended as this calculation finishes quickly. 
+
+- Multiple Trajectory Estimate
+A simulation of the complex in water, the receptor in water and the ligand in water are run in advance. This is useful the ligand is expected to have a significantly different conformation in solution vs in the complex. The trajectory of this complex is used to estimate the MMPBSA or MMGBSA depending on the options chosen. A General Born (GB) calculation is recommended as this calculation finishes quickly. 
 
 .. class:: infomark
 
 **Outputs created**
 
+- The statistics file which includes all information about the frames analysed and average energies. 
+The DELTA G binding is estimated. If negative this is a favourable binding. Note that by default the entropy contribution to binding (unfavourable) is not calculated. A normal mode analysis is needed. 
+- The decomposition file contains a breakdown of each residues contribution to the energy. For example using the default Energy Decomposition Scheme (1) the interaction of each residue with the rest of the system is calculated and listed.
+- The parameter file contains the input parameters passed from Galaxy to MMPBSA.p in the expected MMPBSA input format. 
 
 .. class:: infomark
 
 **User guide and documentation**
 
-- link to amber tools and tutorials online https://ambermd.org/doc12/Amber18.pdf
-- There are many more complex flags available. This wrapper support only normal binding free energies. Parallel calculations are also not supported at present.
-- This is based on MMPBSA.py. More details on options that are not so well documented - see "$CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/input_parser.py" and "$CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/main.py"
+- [The AmberTools Manual](https://ambermd.org/doc12/Amber18.pdf)
+- [The Amber Tutorials on using MMPBSA.py](http://ambermd.org/tutorials/advanced/tutorial3/py_script/index.htm)
+- There are many more complex flags available. This Galaxy wrapper supports only normal binding free energies. Parallel calculations are also not supported at present.
+- This is based on MMPBSA.py. More details on options that are not details in the Manual and Tutorials can be found in the code- see "$CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/input_parser.py" and "$CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/main.py"
 
 
 
