@@ -2,16 +2,16 @@
 #  
 &general
 startframe={{ allparams.startframe }}, endframe={{ allparams.endframe }}, interval={{ allparams.interval }},
-verbose={{ allparams.verbose }}, keep_files={{ allparams.keep_files }}, strip_mask={{ allparams.strip_mask }},
+verbose={{ allparams.verbose }}, keep_files={{ allparams.keep_files }}, strip_mask={{ allparams.strip_mask }}, use_sander={{ allparams.use_sander }}, entropy={{ allparams.entropy }}
 /
-{% if calcdetails.calculation.calctype == 'gb' %}
+{% if calcdetails.gbcalc.calctype == 'yes' %}
 &gb
-igb={{ calcdetails.calculation.igb }}, saltcon={{ calcdetails.calculation.saltcon }}
+igb={{ calcdetails.gbcalc.igb }}, saltcon={{ calcdetails.gbcalc.saltcon }}
 /
 {% endif %}
-{% if calcdetails.calculation.calctype == 'pb' %}
+{% if calcdetails.pbcalc.calctype == 'yes' %}
 &pb
-istrng={{ calcdetails.calculation.istrng }}, fillratio={{ calcdetails.calculation.fillratio }}, inp={{ calcdetails.calculation.inp }},radiopt={{ calcdetails.calculation.radiopt }}
+istrng={{ calcdetails.pbcalc.istrng }}, fillratio={{ calcdetails.pbcalc.fillratio }}, inp={{ calcdetails.pbcalc.inp }},radiopt={{ calcdetails.pbcalc.radiopt }}
 /
 {% endif %}
 {% if calcdetails.decomposition.decomposition == 'yes' %}

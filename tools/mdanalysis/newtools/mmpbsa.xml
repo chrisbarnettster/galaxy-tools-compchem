@@ -44,62 +44,74 @@ with open("$parameteroutfile",'w+') as f:
   <inputs>
     <section name="input" title="Input" expanded="true">
       <conditional name="simulation">
-        <param name="simtype" type="select" label="Single or Multiple Trajectories" help="Choose if this is a single or multiple trajectory estimate">
-          <option selected="True" value="single">single (STP)</option>
-          <option value="multiple">multiple (MTP)</option>
+        <param name="simtype" type="select" label="Single or Multiple Trajectories" help="For a single complex in water choose Single. For complex, receptor and ligand trajectories choose multiple">
+          <option selected="True" value="single">Single Trajectory Protocol (STP)</option>
+          <option value="multiple">Multiple Trajectory Protocol (MTP)</option>
         </param>
         <when value="single">
-          <param format="txt,prmtop" name="complex" type="data" label="AMBER prmtop input for Complex"/>
-          <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex"/>
-          <param format="txt,prmtop" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
           <param format="txt,prmtop" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
-          <param format="txt,prmtop" optional="true" name="solvatedcomplex" type="data" label="AMBER prmtop input for Solvated Complex"/>
+          <param format="txt,prmtop" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
+          <param format="txt,prmtop" name="complex" type="data" label="AMBER prmtop input for Complex"/>
+          <param format="txt,prmtop" optional="true" name="solvatedcomplex" type="data" label="AMBER prmtop input for Solvated Complex" help="This is optional. Not required if trajectory already has solvent removed"/>
+          <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex" help="Trajectory of the (solvated) complex"/>
         </when>
         <when value="multiple">
-          <param format="txt,prmtop" name="complex" type="data" label="AMBER prmtop input for Complex"/>
-          <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex"/>
-          <param format="txt,prmtop" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
-          <param format="netcdf" name="trajreceptor" type="data" label="NetCDF trajectory input for Receptor"/>
           <param format="txt,prmtop" name="ligand" type="data" label="AMBER prmtop input for Ligand"/>
+          <param format="txt,prmtop" name="receptor" type="data" label="AMBER prmtop input for Receptor"/>
+          <param format="txt,prmtop" name="complex" type="data" label="AMBER prmtop input for Complex"/>
+          <param format="txt,prmtop" optional="true" name="solvatedcomplex" type="data" label="AMBER prmtop input for Solvated Complex" help="This is optional. Not required if trajectory alraeady has solvent removed"/>
           <param format="netcdf" name="trajligand" type="data" label="NetCDF trajectory input for Ligand"/>
-          <param format="txt,prmtop" optional="true" name="solvatedcomplex" type="data" label="AMBER prmtop input for Solvated Complex"/>
+          <param format="netcdf" name="trajreceptor" type="data" label="NetCDF trajectory input for Receptor"/>
+          <param format="netcdf" name="trajcomplex" type="data" label="NetCDF trajectory input for Complex"/>
         </when>
       </conditional>
     </section>
-    <section name="allparams" title="General parameters" expanded="true">
-      <param name="startframe" type="integer" value="1" label="First frame to analyse" min="1" max="10000"/>
-      <param name="endframe" type="integer" value="9999999" label="Final frame to analyse" min="10" max="100000000"/>
-      <param name="interval" type="integer" value="5" label="interval between frames analysed" min="1" max="10000"/>
-      <param name="verbose" type="integer" value="2" label="verbosity" min="0" max="3"/>
-      <param name="keep_files" type="integer" value="0" label="keep files" min="0" max="1"/>
-      <param name="strip_mask" type="text" value=":WAT:Cl-:Na+" label="Mask for removing unneeded atoms (e.g. water and ions) from solvated prmtop"/>
+    <section name="allparams" title="General parameters" expanded="false">
+      <param name="startframe" type="integer" value="1" label="First frame to analyse" min="1" max="100000000"/>
+      <param name="endframe" type="integer" value="9999999" label="Final frame to analyse" min="1" max="100000000"/>
+      <param name="interval" type="integer" value="1" label="interval between frames analysed" min="1" max="10000"/>
+      <param name="entropy" type="integer" value="1" label="quasi-harmonic entropy calculation" min="0" max="1" help="1- calculate the quasi-harmonic entropy or 0 - do not"/>
+      <param name="use_sander" type="integer" value="0" label="use sander" min="0" max="1" help="0 - defaults to no (will use sander if needed). 1 - always use sander"/>
+      <param name="verbose" type="integer" value="2" label="verbosity" min="0" max="3" help="0 - not verbose 3 - ultra verbose"/>
+      <param name="keep_files" type="integer" value="0" label="keep additional files" min="0" max="1" help="0 - no, 1 - yes"/>
+      <param name="strip_mask" type="text" value=":WAT:Cl-:Na+" label="Strip mask" help="Enter a mask for removing unneeded atoms (water/ions)from the solvated prmtop"/>
     </section>
     <section name="calcdetails" title="Details of calculation and parameters" expanded="true">
-      <conditional name="calculation">
-        <param name="calctype" type="select" label="GB or PB calculation" help="Choose if this is a GB or PB">
-          <option selected="True" value="gb">gb</option>
-          <option value="pb">pb</option>
-        </param>
-        <when value="gb">
-          <param name="igb" type="integer" value="5" label="igb GB model" min="0" max="7"/>
-          <param name="saltcon" type="float" value="0.150" label="Salt Concentration (M)" min="0.0" max="2.0"/>
-        </when>
-        <when value="pb">
-          <param name="istrng" type="float" value="0.15" label="Ionic Strength" min="0.0" max="2.0"/>
-          <param name="fillratio" type="float" value="4.0" label="The ratio between the longest dimension of the rectangular finite-difference grid and that of the solute" min="0.0" max="10.0"/>
-          <param name="inp" type="integer" value="1" label="Nonpolar solvation method" min="1" max="2"/>
-          <param name="radiopt" type="integer" value="0" label="Use optimized radii?" min="0" max="2"/>
-        </when>
-      </conditional>
-      <conditional name="decomposition">
-        <param name="decomposition" type="select" label="Decomposition Analysis?" help="Choose to carry out decomposition analysis">
+      <conditional name="gbcalc">
+        <param name="calctype" type="select" label="General Born calculation" help="Choose carry out General Born Calculation">
           <option selected="True" value="yes">yes</option>
           <option value="no">no</option>
         </param>
         <when value="yes">
-          <param name="csv_format" type="integer" value="1" label="CSV format" min="0" max="1"/>
-          <param name="dec_verbose" type="integer" value="1" label="Decomposition Verbosity" min="0" max="2"/>
-          <param name="idecomp" type="integer" value="1" label="Energy Decomposition Scheme" min="1" max="4"/>
+          <param name="igb" type="integer" value="5" label="igb GB model" min="0" max="7" help="5 - default"/>
+          <param name="saltcon" type="float" value="0.150" label="Salt Concentration (M)" min="0.0" max="2.0"/>
+        </when>
+        <when value="no">
+        </when>
+      </conditional>
+      <conditional name="pbcalc">
+        <param name="calctype" type="select" label="Poisson Boltzman calculation" help="Choose carry out Poisson Boltzman Calculation">
+          <option value="yes">yes</option>
+          <option selected="True" value="no">no</option>
+        </param>
+        <when value="yes">
+          <param name="istrng" type="float" value="0.15" label="Ionic Strength (M)" min="0.0" max="2.0"/>
+          <param name="fillratio" type="float" value="4.0" label="Fill ratio" help="The ratio between the longest dimension of the rectangular finite-difference grid and that of the solute" min="0.0" max="10.0"/>
+          <param name="inp" type="integer" value="1" label="Nonpolar solvation method" min="1" max="2" help="1 - default"/>
+          <param name="radiopt" type="integer" value="0" label="Use optimized radii?" min="0" max="2" help="0 - default do not use these"/>
+        </when>
+        <when value="no">
+        </when>
+      </conditional>
+      <conditional name="decomposition">
+        <param name="decomposition" type="select" label="Decomposition Analysis" help="Choose to carry out decomposition analysis">
+          <option selected="True" value="yes">yes</option>
+          <option value="no">no</option>
+        </param>
+        <when value="yes">
+          <param name="csv_format" type="integer" value="1" label="CSV format" min="0" max="1" help="defaults to yes (1). Choose 0 for unformatted text output"/>
+          <param name="dec_verbose" type="integer" value="1" label="Decomposition Verbosity" min="0" max="2" help="choose how verbose the output is. 0 - not verbose, 2- very verbose"/>
+          <param name="idecomp" type="integer" value="1" label="Energy Decomposition Scheme" min="1" max="4" help="choose an energy decomposition scheme. 1 - 2 - 3 - 4"/>
         </when>
         <when value="no">
         </when>
@@ -113,15 +125,49 @@ with open("$parameteroutfile",'w+') as f:
   </outputs>
     <tests>
         <test>
-        <param name="complex" value="complex.prmtop" ftype="txt"/>
-	<param name="trajcomplex" value="1err_desolvated.nc" ftype="netcdf"/>
-        <param name="receptor" value="receptor.prmtop" ftype="txt"/>
-        <param name="ligand" value="ligand.prmtop" ftype="txt"/>
-            <param name="calcdetails|calculation|igb" value="2"/>
-            <param name="calcdetails|calculation|saltcon" value="0.100"/>
+            <param name="ligand" value="ligand.prmtop" ftype="txt"/>
+            <param name="receptor" value="receptor.prmtop" ftype="txt"/>
+            <param name="complex" value="complex.prmtop" ftype="txt"/>
+	    <param name="trajcomplex" value="1err_desolvated.nc" ftype="netcdf"/>
+            <param name="allparams|entropy" value="0"/>
+            <param name="calcdetails|gbcalc|calctype" value="yes"/>
+            <param name="calcdetails|gbcalc|igb" value="2"/>
+            <param name="calcdetails|gbcalc|saltcon" value="0.100"/>
+            <param name="calcdetails|decomposition|decomposition" value="no"/>
             <output name="resultoutfile">
               <assert_contents>
+                <has_text text="GENERALIZED BORN:" />
                 <has_text text="DELTA TOTAL                -52." />
+              </assert_contents>
+            </output>
+        </test>
+        <test>
+            <param name="ligand" value="ligand.prmtop" ftype="txt"/>
+            <param name="receptor" value="receptor.prmtop" ftype="txt"/>
+            <param name="complex" value="complex.prmtop" ftype="txt"/>
+	    <param name="trajcomplex" value="1err_desolvated.nc" ftype="netcdf"/>
+            <param name="allparams|startframe" value="1"/>
+            <param name="allparams|endframe" value="1"/>
+            <param name="allparams|entropy" value="0"/>
+            <param name="calcdetails|gbcalc|calctype" value="yes"/>
+            <param name="calcdetails|gbcalc|igb" value="2"/>
+            <param name="calcdetails|gbcalc|saltcon" value="0.100"/>
+            <param name="calcdetails|pbcalc|calctype" value="yes"/>
+            <param name="calcdetails|pbcalc|istrng" value="0.100"/>
+            <param name="calcdetails|decomposition|decomposition" value="yes"/>
+            <output name="resultoutfile">
+              <assert_contents>
+                <has_text text="GENERALIZED BORN:" />
+                <has_text text="DELTA TOTAL                -56." />
+                <has_text text="POISSON BOLTZMANN:" />
+		<has_text text="DELTA TOTAL                -47" />
+              </assert_contents>
+            </output>
+            <output name="decompoutfile">
+              <assert_contents>
+                <has_text text="idecomp = 1: Per-residue decomp adding 1-4 interactions to Internal" />
+                <has_text text="HIE 240,R HIE 240" />
+                <has_text text="RAL 241,L RAL   1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0" />
               </assert_contents>
             </output>
         </test>
