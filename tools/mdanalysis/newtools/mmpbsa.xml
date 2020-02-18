@@ -114,10 +114,9 @@ with open("$parameteroutfile",'w+') as f:
     <tests>
         <test>
         <param name="complex" value="complex.prmtop" ftype="txt"/>
-	<param name="trajcomplex" value="1err_prod.nc" ftype="netcdf"/>
+	<param name="trajcomplex" value="1err_desolvated.nc" ftype="netcdf"/>
         <param name="receptor" value="receptor.prmtop" ftype="txt"/>
         <param name="ligand" value="ligand.prmtop" ftype="txt"/>
-        <param name="solvatedcomplex" value="1err.solvated.prmtop" ftype="txt"/>
             <param name="calcdetails|calculation|igb" value="2"/>
             <param name="calcdetails|calculation|saltcon" value="0.100"/>
             <output name="resultoutfile">
@@ -149,16 +148,37 @@ with open("$parameteroutfile",'w+') as f:
 
     - The statistics file which includes all information about the frames analysed and average energies. The DELTA G binding is estimated. If negative this is a favourable binding. Note that by default the entropy contribution to binding (unfavourable) is not calculated. A normal mode analysis is needed.
     - The decomposition file contains a breakdown of each residues contribution to the energy. For example using the default Energy Decomposition Scheme (1) the interaction of each residue with the rest of the system is calculated and listed.
-    - The parameter file contains the input parameters passed from Galaxy to MMPBSA.p in the expected MMPBSA input format.
+    - The parameter file contains the input parameters passed from Galaxy to MMPBSA.py in the expected MMPBSA input format.
 
     .. class:: infomark
 
     **User guide and documentation**
 
-    - `The AmberTools Manual <https://ambermd.org/doc12/Amber18.pdf>`_.
-    - `The Amber Tutorials on using MMPBSA.py <http://ambermd.org/tutorials/advanced/tutorial3/py_script/index.htm>`_.
+    - The `AmberTools Manual`_
+    - The `Amber Tutorial`_ on using MMPBSA.py
     - There are many more complex flags available. This Galaxy wrapper only supports GB and PB binding free energies and decomposition. Parallel calculations are not supported at present.
     - This Galaxy tool is based on MMPBSA.py. More details on options that are not details in the Manual and Tutorials can be found in the code - see "$CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/input_parser.py" and "$CONDA_PREFIX/lib/python3.7/site-packages/MMPBSA_mods/main.py".
+
+    .. class:: infomark
+
+    **Test data**
+
+    - The test data for this tool comes from an `Amber Tutorial`_ and the original dataset_ is available.
+    - For convenience, water has been stripped from the .mdcrd trajectory and this has been converted to netcdf format. 
+
+    .. code-block:: python
+
+      import mdtraj as md
+      traj = md.load('1err_prod.mdcrd', top='1err.solvated.prmtop')
+      topology = traj.topology
+      atoms_to_keep = topology.select('not water')
+      traj.restrict_atoms(atoms_to_keep)
+      traj.save('1err_desolvated.nc')
+
+
+    .. _`Amber Tutorial`: http://ambermd.org/tutorials/advanced/tutorial3/py_script/index.htm 
+    .. _`AmberTools Manual`: https://ambermd.org/doc12/Amber18.pdf
+    .. _dataset: http://ambermd.org/tutorials/advanced/tutorial3/py_script/files/Est_Rec_top_mdcrd.tgz
 
 
     ]]>
